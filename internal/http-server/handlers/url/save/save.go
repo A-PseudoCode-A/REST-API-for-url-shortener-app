@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/A-PseudoCode-A/REST-API-for-url-shortener-app/internal/lib/api/response"
-	"github.com/A-PseudoCode-A/REST-API-for-url-shortener-app/internal/lib/logger/sl"
+	"github.com/A-PseudoCode-A/REST-API-for-url-shortener-app/internal/lib/logger/sl" 
 	"github.com/A-PseudoCode-A/REST-API-for-url-shortener-app/internal/lib/random"
 	"github.com/A-PseudoCode-A/REST-API-for-url-shortener-app/internal/storage"
 	"github.com/go-chi/chi/v5/middleware"
@@ -26,6 +26,7 @@ type Response struct {
 	Alias string `json:"alias,omitempty"`
 }
 
+//go:generate go run github.com/vektra/mockery/v2@v2.51.0 --name=URLSaver
 type URLSaver interface {
 	SaveURL(urlToSave string, alias string) (int64, error)
 }

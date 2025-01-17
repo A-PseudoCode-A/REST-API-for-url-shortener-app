@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/A-PseudoCode-A/REST-API-for-url-shortener-app/internal/config"
+	"github.com/A-PseudoCode-A/REST-API-for-url-shortener-app/internal/http-server/handlers/redirect"
 	"github.com/A-PseudoCode-A/REST-API-for-url-shortener-app/internal/http-server/handlers/url/save"
 	"github.com/A-PseudoCode-A/REST-API-for-url-shortener-app/internal/http-server/middleware/logger"
 	"github.com/A-PseudoCode-A/REST-API-for-url-shortener-app/internal/lib/logger/handlers/slogpretty"
@@ -26,7 +27,7 @@ func main() {
 
 	log := setupLogger(cfg.Env)
 
-	log.Info("starting url-shortener", slog.String("env", cfg.Env))
+	log.Info("starting url-shortener", slog.String("env", cfg.Env), slog.String("version", "1"))
 	log.Debug("debug messages are enabled")
 
 	storage, err := sqlite.New(cfg.StoragePath)
@@ -43,7 +44,15 @@ func main() {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
 
-	router.Post("/url", save.New(log, storage))
+	router.Route("/url", func(r chi.Router) {
+		r.Use(middleware.BasicAuth("url-shortener", map[string]string{
+			cfg.HTTPServer.User: cfg.HTTPServer.Password,
+		}))
+
+		r.Post("/", save.New(log, storage))
+	})
+
+	router.Get("/{alias}", redirect.New(log, storage))
 
 	log.Info("starting server", slog.String("address", cfg.Adress))
 
