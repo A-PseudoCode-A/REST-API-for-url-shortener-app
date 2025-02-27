@@ -16,17 +16,13 @@
 
 1. **Клонирование репозитория**:
 
-   ```bash
+   ```
    git clone https://github.com/A-PseudoCode-A/REST-API-for-url-shortener-app.git
    cd REST-API-for-url-shortener-app
    ```
 2.  **Установка зависимостей**:
 
     Убедитесь, что у вас установлен Go версии 1.16 или выше. Затем выполните:
-
-    bash
-
-    КопироватьРедактировать
 
     `go mod download`
 
@@ -37,10 +33,6 @@
 4.  **Запуск сервиса**:
 
     Скомпилируйте и запустите сервис:
-
-    bash
-
-    КопироватьРедактировать
 
     `go run cmd/url-shortener/main.go`
 
